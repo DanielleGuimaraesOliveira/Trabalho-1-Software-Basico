@@ -1,6 +1,9 @@
+/* Danielle Guimarães 2320336 33C */
+/* Matheus Oliveira 2320452 33C */
 
 #include <stdio.h>
 #include <string.h>
+#include "testebigint.c"
 
 #define NUM_BITS 128
 typedef unsigned char BigInt[NUM_BITS/8];

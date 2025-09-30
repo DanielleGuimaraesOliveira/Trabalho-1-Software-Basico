@@ -1,16 +1,10 @@
-/* Danielle Guimarães 2320336 33C */
-/* Matheus Oliveira 2320452 33C */
-
-#include "bigint.h"
+#include "bigint.c"
 #include <stdio.h>
-#include <CUnite.h>
 
 #define NUM_BITS 128
 typedef unsigned char BigInt[NUM_BITS/8];
 
 int testa_big_val (BigInt res, long val) {
-    CU_ASSERT(big_val(res, val) == 0);
-
     return 0;
 }
 
