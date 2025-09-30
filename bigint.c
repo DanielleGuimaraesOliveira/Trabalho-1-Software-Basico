@@ -28,18 +28,44 @@ void big_val (BigInt res, long val){
 
     }
 
-    big_print(res);
 }
+
+
+void big_comp2(BigInt res, BigInt a){
+    unsigned indice = 0;
+    unsigned qt_bytes = NUM_BITS / 8;
+
+    while(indice < qt_bytes){
+         res[indice] = ~a[indice];
+         indice++;
+    }
+    // adicionar 1 e caso ocorra overflow, propagar o um pelo vetor
+    unsigned um = 1;
+    indice = 0;
+
+    while (indice < qt_bytes && um) {
+        // salvo em uma variavel maior que char para evitar overflow
+        unsigned sum = res[indice] + um;
+        //pego o byte menos significativo, e atribuo ao res
+        res[indice] = sum & 0xff;
+        // o proximo um é o byte mais significativo que restou da soma
+        um = sum >> 8;
+        indice++;
+
+    }
+}
+
 
 
 
 
 int main (){
     // teste da função big_val
-    long num = 123;
+    long num = 256;
     BigInt bigint;
     big_val(bigint, num);
 
+    big_comp2(bigint, bigint);
     
     return 0;
 }
