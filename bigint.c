@@ -33,7 +33,6 @@ void big_val (BigInt res, long val){
 
 }
 
-
 void big_comp2(BigInt res, BigInt a){
     unsigned indice = 0;
     unsigned qt_bytes = NUM_BITS / 8;
@@ -48,15 +47,44 @@ void big_comp2(BigInt res, BigInt a){
 
     while (indice < qt_bytes && um) {
         // salvo em uma variavel maior que char para evitar overflow
-        unsigned sum = res[indice] + um;
+        unsigned soma = res[indice] + um;
         //pego o byte menos significativo, e atribuo ao res
-        res[indice] = sum & 0xff;
+        res[indice] = soma & 0xff;
         // o proximo um é o byte mais significativo que restou da soma
-        um = sum >> 8;
+        um = soma >> 8;
         indice++;
 
     }
 }
+
+void big_sum(BigInt res, BigInt a, BigInt b){
+    unsigned qt_bytes = NUM_BITS / 8;
+    unsigned um = 0;
+    unsigned indice = 0;
+
+    while(indice < qt_bytes){
+        unsigned soma = a[indice] + b[indice] + um;
+        res[indice] = soma & 0xff;
+        um = soma >> 8;
+        indice++;
+    }
+    big_print(res);
+}
+
+
+void big_sub(BigInt res, BigInt a, BigInt b){
+    unsigned um = 0;
+    unsigned indice = (NUM_BITS / 8)- 1;
+
+    while(indice >= 0){
+        unsigned soma = a[indice] - b[indice] - um;
+        res[indice] = soma & 0xff;
+        um = (soma >> 8) & 1;
+        indice--;
+    }
+    big_print(res);
+}
+
 
 
 
@@ -64,11 +92,15 @@ void big_comp2(BigInt res, BigInt a){
 
 int main (){
     // teste da função big_val
-    long num = 256;
+    long num = 1;
     BigInt bigint;
+    BigInt bigint2;
+    BigInt bigint3;
+    big_val(bigint3, 0);
     big_val(bigint, num);
+    big_val(bigint2, 2);
 
-    big_comp2(bigint, bigint);
+    big_sub(bigint3, bigint, bigint2);
     
     return 0;
 }
