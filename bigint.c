@@ -68,20 +68,13 @@ void big_sum(BigInt res, BigInt a, BigInt b){
         um = soma >> 8;
         indice++;
     }
-    big_print(res);
 }
 
 
 void big_sub(BigInt res, BigInt a, BigInt b){
-    unsigned um = 0;
-    unsigned indice = (NUM_BITS / 8)- 1;
-
-    while(indice >= 0){
-        unsigned soma = a[indice] - b[indice] - um;
-        res[indice] = soma & 0xff;
-        um = (soma >> 8) & 1;
-        indice--;
-    }
+    BigInt compa2_b;
+    big_comp2(compa2_b, b);
+    big_sum(res, a, compa2_b);
     big_print(res);
 }
 
@@ -92,15 +85,5 @@ void big_sub(BigInt res, BigInt a, BigInt b){
 
 int main (){
     // teste da função big_val
-    long num = 1;
-    BigInt bigint;
-    BigInt bigint2;
-    BigInt bigint3;
-    big_val(bigint3, 0);
-    big_val(bigint, num);
-    big_val(bigint2, 2);
-
-    big_sub(bigint3, bigint, bigint2);
-    
     return 0;
 }
