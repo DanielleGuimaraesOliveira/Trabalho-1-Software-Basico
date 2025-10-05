@@ -1,5 +1,5 @@
-/* Danielle Guimarães 2320336 33C */
-/* Matheus Oliveira 2320452 33C */
+/* NOME: Danielle Guimarães Cruz de Oliveira MATRICULA: 2320336 TURMA:33C */
+/* NOME: Matheus Oliveira Cruz de Oliveira MATRICULA: 2320452 TURMA:33C */
 
 #include <stdio.h>
 #include <string.h>
@@ -118,11 +118,81 @@ void big_mul(BigInt res, BigInt a, BigInt b){
         }
     }
 }
+/* res = a << n */
+void big_shl(BigInt res, BigInt a, int n){
+    memset(res, 0, sizeof(BigInt));
+    unsigned num_bytes = NUM_BITS / 8;
 
+    if (n >= NUM_BITS) return; // se n é maior ou igual ao número de bits, o resultado é zero
 
+    unsigned desloca_bytes = n / 8;
+    unsigned desloca_bits = n % 8;
 
-
-
-int main (){
+    for (unsigned i = 0; i < num_bytes; i++) {
+        if (i + desloca_bytes < num_bytes) {
+            res[i + desloca_bytes] |= (a[i] << desloca_bits) & 0xFF;
+        }
+        if (desloca_bits != 0 && i + desloca_bytes + 1 < num_bytes) {
+            res[i + desloca_bytes + 1] |= (a[i] >> (8 - desloca_bits)) & 0xFF;
+        }
+    }
 
 }
+
+/* res = a >> n (lógico)*/
+void big_shr(BigInt res, BigInt a, int n){
+    memset(res, 0, sizeof(BigInt));
+    unsigned num_bytes = NUM_BITS / 8;
+
+    if (n >= NUM_BITS) return; // se n é maior ou igual ao número de bits, o resultado é zero
+
+    unsigned desloca_bytes = n / 8;
+    unsigned desloca_bits = n % 8;
+
+    for (unsigned i = 0; i < num_bytes; i++) {
+        if (i >= desloca_bytes) {
+            res[i - desloca_bytes] |= (a[i] >> desloca_bits) & 0xFF;
+        }
+        if (desloca_bits != 0 && i >= desloca_bytes + 1) {
+            res[i - desloca_bytes - 1] |= (a[i] << (8 - desloca_bits)) & 0xFF;
+        }
+    }
+}
+
+/* res = a >> n (aritmético)*/
+void big_sar(BigInt res, BigInt a, int n){
+    memset(res, 0, sizeof(BigInt));
+    unsigned num_bytes = NUM_BITS / 8;
+
+    if (n >= NUM_BITS) {
+        // Se n é maior ou igual ao número de bits, o resultado depende do bit de sinal
+        if (a[num_bytes - 1] & 0x80) { // se o bit de sinal é 1 (número negativo)
+            memset(res, 0xFF, sizeof(BigInt)); // preenche com 1s
+        }
+        return;
+    }
+
+    unsigned desloca_bytes = n / 8;
+    unsigned desloca_bits = n % 8;
+
+    for (unsigned i = 0; i < num_bytes; i++) {
+        if (i >= desloca_bytes) {
+            res[i - desloca_bytes] |= (a[i] >> desloca_bits) & 0xFF;
+        }
+        if (desloca_bits != 0 && i >= desloca_bytes + 1) {
+            res[i - desloca_bytes - 1] |= (a[i] << (8 - desloca_bits)) & 0xFF;
+        }
+    }
+
+    // Se o número é negativo, preenche os bits mais significativos com 1s
+    if (a[num_bytes - 1] & 0x80) {
+        for (unsigned i = num_bytes - 1; i >= num_bytes - desloca_bytes; i--) {
+            res[i] = 0xFF;
+        }
+        if (desloca_bits != 0 && num_bytes > desloca_bytes) {
+            res[num_bytes - desloca_bytes - 1] |= ((1 << desloca_bits) - 1) << (8 - desloca_bits);
+        }
+    }
+}
+
+
