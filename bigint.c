@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "testebigint.c"
+// #include "testebigint.c"
 
 #define NUM_BITS 128
 typedef unsigned char BigInt[NUM_BITS/8];
@@ -70,20 +70,59 @@ void big_sum(BigInt res, BigInt a, BigInt b){
     }
 }
 
-
 void big_sub(BigInt res, BigInt a, BigInt b){
+    memset(res, 0, sizeof(BigInt));
     BigInt compa2_b;
     big_comp2(compa2_b, b);
     big_sum(res, a, compa2_b);
     big_print(res);
 }
 
+void big_mul(BigInt res, BigInt a, BigInt b){
+    BigInt temp;
+    memset(res, 0, sizeof(BigInt));
+    unsigned num_bytes = NUM_BITS / 8;
+
+    // Para cada bit do multiplicador b
+    for (unsigned pos_bit = 0; pos_bit < NUM_BITS; pos_bit++) {
+        unsigned indice_byte_b = pos_bit / 8;
+        unsigned indice_bit_b = pos_bit % 8;
+        unsigned mascara_bit_b = 1 << indice_bit_b;
+
+        // Se o bit correspondente de b está ligado
+        if (b[indice_byte_b] & mascara_bit_b) {
+            memset(temp, 0, sizeof(BigInt));
+            unsigned desloca_byte = pos_bit / 8;
+            unsigned desloca_bit = pos_bit % 8;
+
+            // Para cada byte do multiplicando a
+            for (unsigned indice_byte_a = 0; indice_byte_a < num_bytes; indice_byte_a++) {
+                unsigned valor_a = a[indice_byte_a];
+                if (valor_a == 0) continue;
+
+                // Desloca o byte de a para a esquerda
+                unsigned deslocado = valor_a << desloca_bit;
+                unsigned sobra = 0;
+                // Se houver deslocamento de bits, pega o "resto" do próximo byte
+                if (desloca_bit && indice_byte_a < num_bytes - 1)
+                    sobra = a[indice_byte_a + 1] >> (8 - desloca_bit);
+
+                unsigned indice_temp = indice_byte_a + desloca_byte;
+                if (indice_temp < num_bytes)
+                    temp[indice_temp] |= deslocado & 0xFF;
+                if (desloca_bit && indice_temp + 1 < num_bytes)
+                    temp[indice_temp + 1] |= sobra & 0xFF;
+            }
+            // Soma o valor temporário ao resultado acumulado
+            big_sum(res, res, temp);
+        }
+    }
+}
 
 
 
 
 
 int main (){
-    // teste da função big_val
-    return 0;
+
 }
