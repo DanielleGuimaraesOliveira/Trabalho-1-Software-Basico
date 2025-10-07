@@ -1,2 +1,30 @@
 /* Danielle Guimarães 2320336 33C */
 /* Matheus Oliveira 2320452 33C */
+
+O que fizemos?
+    - Criação de todas as funções para o BigInt
+    - Testes para cada função do BigInt
+
+Estratégia para testes
+    - Identificamos as funcionalidades de cada função e suas alterações
+    - Identificamos os três tipos de valores principais (número negativo, positivo e zero)
+    - Identificamos os casos a partir do valor testado e comparamos com o resultado esperado na alteração pela função
+    - Mostramos a quantidade de testes com seus sucessos e falhas
+
+Framework usado para testes
+    - CUnit
+
+Como baixar o Framework
+```
+    sudo apt update
+    sudo apt-get install libcunit1 libcunit1-doc libcunit1-dev
+```
+
+Como compila 
+```
+    gcc -o testebigint testebigint.c  bigint.c -lcunit
+    ./testebigint
+```
+
+Quantos testes passaram?
+    - Todos

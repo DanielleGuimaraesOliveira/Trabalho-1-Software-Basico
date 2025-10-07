@@ -39,6 +39,25 @@ void testa_big_val (void) {
     CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
 }
 
+void testa_big_sar (void){
+    BigInt resultado;
+    BigInt esperado;
+
+    memset(resultado, 0, sizeof(BigInt));
+    esperado[0] = -1;
+    printf("%02x", esperado[0]);
+    // big_sar(resultado, esperado, )
+
+
+    // Teste 1: Desloca um número negativo 
+    // Teste 2: Desloca um número positivo
+    // Teste 3: Desloca o zero quantidades
+    // Teste 4: Desloca um número negativo por mais de 128 bits
+    // Teste 5: Desloca um número positivo por mais de 128 bits
+
+
+}
+
 
 int main (void) {
     if (CU_initialize_registry() != CUE_SUCCESS) {
