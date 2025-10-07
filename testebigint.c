@@ -74,6 +74,10 @@ int main (void) {
         CU_cleanup_registry();
         return CU_get_error();
     }
+    if ((CU_add_test(suite, "Teste do big_comp2()", testa_big_comp2) == NULL)) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
 
     CU_basic_set_mode(CU_BRM_VERBOSE);
     CU_basic_run_tests();

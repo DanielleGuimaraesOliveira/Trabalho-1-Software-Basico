@@ -8,16 +8,6 @@
 #define NUM_BITS 128
 typedef unsigned char BigInt[NUM_BITS/8];
 
-// função temporária/não oficial para imprimir o BigInt em hexadecimal
-void big_print(const BigInt num) {
-    
- 
-    for (int i = 0; i < NUM_BITS/8; i++) {
-        printf("%02X", num[i]);
-    }
-    printf("\n");
-}
-
 void big_val (BigInt res, long val){
     memset(res, 0, sizeof(BigInt)); // inicializa o BigInt com zeros
     unsigned indice = 0;
@@ -75,7 +65,6 @@ void big_sub(BigInt res, BigInt a, BigInt b){
     BigInt compa2_b;
     big_comp2(compa2_b, b);
     big_sum(res, a, compa2_b);
-    big_print(res);
 }
 
 void big_mul(BigInt res, BigInt a, BigInt b){
