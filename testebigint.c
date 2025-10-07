@@ -13,24 +13,29 @@ typedef unsigned char BigInt[NUM_BITS/8];
 void testa_big_val (void) {
     BigInt resultado;
     BigInt esperado;
-    
-    // Teste 1: Converter um número pequeno (23)
+
+    // Teste 1: Converter um número positivo que cabe em um byte
     big_val(resultado, 23);
-    
-    // O valor esperado para 23 em um BigInt de 16 bytes (128 bits)
-    // é 0x17 (23 em hexadecimal) no primeiro byte e o restante zero.
     memset(esperado, 0, sizeof(BigInt));
     esperado[0] = 23;
     
-    // CU_ASSERT_EQUAL compara dois valores. Para arrays, você precisa de um loop ou memcmp
-    // Para arrays, memcmp é uma ótima opção para comparar o conteúdo de memória
     CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
 
-    // Teste 2: Converter um número maior que cabe em um byte (256)
-    big_val(resultado, 256); // 0x100
+    // Teste 2: Converter um número negativo que cabe em um byte
+    big_val(resultado, -2);
     memset(esperado, 0, sizeof(BigInt));
-    esperado[1] = 1; // 256 é 1 << 8, então o segundo byte será 1
+    esperado[0] = -2;
     
+    for (int i = 1; i < sizeof(BigInt); i++) {
+        esperado[i] = 255;
+    }
+
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 3: Converter o número zero
+    big_val(resultado, 0);
+    memset(esperado, 0, sizeof(BigInt));
+
     CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
 }
 
@@ -46,7 +51,7 @@ int main (void) {
         return CU_get_error();
     }
     
-    if ((CU_add_test(suite, "Test of big_val()", testa_big_val) == NULL)) {
+    if ((CU_add_test(suite, "Teste do big_val()", testa_big_val) == NULL)) {
         CU_cleanup_registry();
         return CU_get_error();
     }
