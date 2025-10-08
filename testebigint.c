@@ -39,6 +39,76 @@ void testa_big_val (void) {
     CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
 }
 
+void testa_big_shl(void){
+    BigInt resultado;
+    BigInt esperado;
+    BigInt valor;
+
+    // Teste 1: Desloca 1 (0x01) << 3 = 0x08
+    big_val(valor, 1L);
+    memset(esperado, 0, sizeof(BigInt));
+    esperado[0] = 8;
+    big_shl(resultado, valor, 3);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 2: Desloca o zero
+    big_val(valor, 0);
+    memset(esperado, 0, sizeof(BigInt));
+    big_shl(resultado, valor, 10);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 3: Desloca por mais de 128 bits
+    big_val(valor, 4L);
+    memset(esperado, 0, sizeof(BigInt));
+    big_shl(resultado, valor, 130);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 4: Desloca número negativo (-2 << 1 = 0xFC...)
+    big_val(valor, -2L);
+    memset(esperado, 0xFF, sizeof(BigInt));
+    esperado[0] = 0xFC;
+    esperado[sizeof(BigInt)-1] = 0xFF;
+
+    big_shl(resultado, valor, 1);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+}
+
+void testa_big_shr (void) {
+    BigInt resultado;
+    BigInt esperado;
+    BigInt valor;
+
+    // Teste 1: Desloca 8 (0x08) >> 3 = 0x01
+    big_val(valor, 8L);
+    memset(esperado, 0, sizeof(BigInt));
+    esperado[0] = 1;
+    big_shr(resultado, valor, 3);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 2: Desloca o zero
+    big_val(valor, 0);
+    memset(esperado, 0, sizeof(BigInt));
+    big_shr(resultado, valor, 0);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 3: Desloca por mais de 128 bits
+    big_val(valor, 4L);
+    memset(esperado, 0, sizeof(BigInt));
+    big_shr(resultado, valor, 130);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 4: Desloca número negativo (-2 >> 1 = 0x7F...)
+    big_val(valor, -2L);
+    memset(esperado, 0, sizeof(BigInt));
+    for (int i = 0; i < sizeof(BigInt)-1; i++) {
+        esperado[i] = 0xFF;
+    }
+    esperado[sizeof(BigInt)-1] = 0x7F;
+
+    big_shr(resultado, valor, 1);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+}
+
 void testa_big_sar (void){
     BigInt resultado;
     BigInt esperado;
@@ -91,11 +161,21 @@ int main (void) {
         CU_cleanup_registry();
         return CU_get_error();
     }
+
     // if ((CU_add_test(suite, "Teste do big_comp2()", testa_big_comp2) == NULL)) {
     //     CU_cleanup_registry();
     //     return CU_get_error();
     // }
 
+    if ((CU_add_test(suite, "Teste do big_shl()", testa_big_shl) == NULL)) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if ((CU_add_test(suite, "Teste do big_shr()", testa_big_shr) == NULL)) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
 
     if ((CU_add_test(suite, "Teste do big_sar()", testa_big_sar) == NULL)) {
         CU_cleanup_registry();
