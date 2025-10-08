@@ -42,20 +42,37 @@ void testa_big_val (void) {
 void testa_big_sar (void){
     BigInt resultado;
     BigInt esperado;
+    BigInt valor;
 
-    memset(resultado, 0, sizeof(BigInt));
-    esperado[0] = -1;
-    printf("%02x", esperado[0]);
-    // big_sar(resultado, esperado, )
+    // Teste 1: Desloca -1 (todos os bits 1)
+    big_val(valor, -1L);
+    memset(esperado, 0xFF, sizeof(BigInt));
+    big_sar(resultado, valor, 4);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
 
+    // Teste 2: Desloca -2 (0xFE...)
+    big_val(valor, -2L);
+    memset(esperado, 0xFF, sizeof(BigInt));
+    big_sar(resultado, valor, 1);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
 
-    // Teste 1: Desloca um número negativo 
-    // Teste 2: Desloca um número positivo
-    // Teste 3: Desloca o zero quantidades
-    // Teste 4: Desloca um número negativo por mais de 128 bits
-    // Teste 5: Desloca um número positivo por mais de 128 bits
+    // Teste 3: Desloca o zero
+    big_val(valor, 0);
+    memset(esperado, 0, sizeof(BigInt));
+    big_sar(resultado, valor, 10);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
 
+    // Teste 4: Desloca -1 por mais de 128 bits
+    big_val(valor, -1L);
+    memset(esperado, 0xFF, sizeof(BigInt));
+    big_sar(resultado, valor, 128);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
 
+    // Teste 5: Desloca 1 por mais de 128 bits
+    big_val(valor, 1L);
+    memset(esperado, 0, sizeof(BigInt));
+    big_sar(resultado, valor, 128);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
 }
 
 
@@ -74,7 +91,13 @@ int main (void) {
         CU_cleanup_registry();
         return CU_get_error();
     }
-    if ((CU_add_test(suite, "Teste do big_comp2()", testa_big_comp2) == NULL)) {
+    // if ((CU_add_test(suite, "Teste do big_comp2()", testa_big_comp2) == NULL)) {
+    //     CU_cleanup_registry();
+    //     return CU_get_error();
+    // }
+
+
+    if ((CU_add_test(suite, "Teste do big_sar()", testa_big_sar) == NULL)) {
         CU_cleanup_registry();
         return CU_get_error();
     }
