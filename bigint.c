@@ -1,5 +1,5 @@
-/* NOME: Danielle Guimarães Cruz de Oliveira MATRICULA: 2320336 TURMA:33C */
-/* NOME: Matheus Oliveira Cruz de Oliveira MATRICULA: 2320452 TURMA:33C */
+/* Danielle Guimarães Cruz de Oliveira 2320336 33C */
+/* Matheus Oliveira Cruz de Oliveira 2320452 33C */
 
 #include <stdio.h>
 #include <string.h>
