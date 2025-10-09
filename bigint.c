@@ -107,6 +107,7 @@ void big_mul(BigInt res, BigInt a, BigInt b){
         }
     }
 }
+
 /* res = a << n */
 void big_shl(BigInt res, BigInt a, int n){
     memset(res, 0, sizeof(BigInt));
@@ -183,5 +184,3 @@ void big_sar(BigInt res, BigInt a, int n){
         }
     }
 }
-
-

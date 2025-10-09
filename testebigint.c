@@ -3,7 +3,6 @@
 
 #include "bigint.h"
 #include <stdio.h>
-#include <string.h>
 #include <CUnit/Basic.h>
 #include <CUnit/CUnit.h>
 
@@ -34,6 +33,35 @@ void testa_big_val (void) {
 
     // Teste 3: Converter o número zero
     big_val(resultado, 0);
+    memset(esperado, 0, sizeof(BigInt));
+
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+}
+
+void testa_big_comp2 (void) {
+    BigInt resultado;
+    BigInt esperado;
+    BigInt valor;
+
+    // Teste 1: Complemento a 2 de um número positivo
+    big_val(valor, 5);
+    big_comp2(resultado, valor);
+    memset(esperado, 0xFF, sizeof(BigInt));
+    esperado[0] = 251; // -5 em complemento a 2
+
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 2: Complemento a 2 de um número negativo
+    big_val(valor, -3);
+    big_comp2(resultado, valor);
+    memset(esperado, 0, sizeof(BigInt));
+    esperado[0] = 3; // 3 em complemento a 2
+
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 3: Complemento a 2 do zero
+    big_val(valor, 0);
+    big_comp2(resultado, valor);
     memset(esperado, 0, sizeof(BigInt));
 
     CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
@@ -314,15 +342,16 @@ int main (void) {
         CU_cleanup_registry();
         return CU_get_error();
     }
+
+    if ((CU_add_test(suite, "Teste do big_comp2()", testa_big_comp2) == NULL)) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
     if ((CU_add_test(suite, "Teste do big_sum()", testa_big_sum) == NULL)) {
         CU_cleanup_registry();
         return CU_get_error();
     }
-    
-    // if ((CU_add_test(suite, "Teste do big_comp2()", testa_big_comp2) == NULL)) {
-    //     CU_cleanup_registry();
-    //     return CU_get_error();
-    // }
 
     if ((CU_add_test(suite, "Teste do big_sub()", testa_big_sub) == NULL)) {
         CU_cleanup_registry();
