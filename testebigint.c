@@ -39,6 +39,67 @@ void testa_big_val (void) {
     CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
 }
 
+void testa_big_sum(void){
+    BigInt a, b, resultado, esperado;
+
+    // Teste 1: 7 + 3 = 10
+    big_val(a, 7L);
+    big_val(b, 3L);
+    memset(esperado, 0, sizeof(BigInt));
+    esperado[0] = 10;
+    big_sum(resultado, a, b);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 2: (-5) + (-2) = -7
+    big_val(a, -5L);
+    big_val(b, -2L);
+    memset(esperado, 0, sizeof(BigInt));
+    esperado[0] = (unsigned char)(-7 & 0xFF);
+    for (int i = 1; i < sizeof(BigInt); i++) esperado[i] = 0xFF;
+    big_sum(resultado, a, b);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 3: (-5) + 2 = -3
+    big_val(a, -5L);
+    big_val(b, 2L);
+    memset(esperado, 0, sizeof(BigInt));
+    esperado[0] = (unsigned char)(-3 & 0xFF);
+    for (int i = 1; i < sizeof(BigInt); i++) esperado[i] = 0xFF;
+    big_sum(resultado, a, b);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 4: (-2) + 5 = 3
+    big_val(a, -2L);
+    big_val(b, 5L);
+    memset(esperado, 0, sizeof(BigInt));
+    esperado[0] = 3;
+    big_sum(resultado, a, b);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 5: (-2) + 5 = 3
+    big_val(a, -2L);
+    big_val(b, 5L);
+    memset(esperado, 0, sizeof(BigInt));
+    esperado[0] = 3;
+    big_sum(resultado, a, b);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 6: 0 + 5 = 5
+    big_val(a, 0L);
+    big_val(b, 5L);
+    memset(esperado, 0, sizeof(BigInt));
+    esperado[0] = 5;
+    big_sum(resultado, a, b);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 7: 0 + 0 = 0
+    big_val(a, 0L);
+    big_val(b, 0L);
+    memset(esperado, 0, sizeof(BigInt));
+    big_sum(resultado, a, b);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+}
+
 void testa_big_sub(void){
     BigInt a, b, resultado, esperado;
 
@@ -68,11 +129,26 @@ void testa_big_sub(void){
     big_sub(resultado, a, b);
     CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
 
-    // Teste 4: 7 - 0 = 7
+    // Teste 4: (5) - 2 = 3
+    big_val(a, 5L);
+    big_val(b, 2L);
+    memset(esperado, 0, sizeof(BigInt));
+    esperado[0] = 3;
+    big_sub(resultado, a, b);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 5: 7 - 0 = 7
     big_val(a, 7L);
     big_val(b, 0L);
     memset(esperado, 0, sizeof(BigInt));
     esperado[0] = 7;
+    big_sub(resultado, a, b);
+    CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
+
+    // Teste 6: 0 - 0 = 0
+    big_val(a, 0L);
+    big_val(b, 0L);
+    memset(esperado, 0, sizeof(BigInt));
     big_sub(resultado, a, b);
     CU_ASSERT_EQUAL(memcmp(resultado, esperado, sizeof(BigInt)), 0);
 }
@@ -235,6 +311,10 @@ int main (void) {
     }
     
     if ((CU_add_test(suite, "Teste do big_val()", testa_big_val) == NULL)) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+    if ((CU_add_test(suite, "Teste do big_sum()", testa_big_sum) == NULL)) {
         CU_cleanup_registry();
         return CU_get_error();
     }
